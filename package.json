@@ -2,13 +2,12 @@
   "name": "puppeteer-twitter-bot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "type": "commonjs",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node start.ts",
-    "dev": "node index.js",
-    "ttt": "node ttt.js"
+    "build": "tsc",
+    "dev": "node index.js"
   },
   "repository": {
     "type": "git",

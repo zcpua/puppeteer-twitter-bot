@@ -1,5 +1,5 @@
 
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 
 
 
@@ -36,10 +36,11 @@ export class TweetBot {
     async randomSleep(minNum: number, maxNum: number) {
         await this.sleep(this.randomNum(minNum, maxNum));
     }
-    async screenshot(name: string) {
+    async screenshot(event: string) {
+        //date-event-account.png
         const date = new Date();
         const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-        await this.page.screenshot({ path: `screenshot/${dateString}_${this.account}_${name}.png` });
+        await this.page.screenshot({ path: `screenshot/${dateString}-${event}-${this.account}.png` });
     }
 
     async login(account: string, password: string, email: string) {
@@ -98,12 +99,23 @@ export class TweetBot {
     }
 
     async follow(uri: string) {
+        // has https://twitter.com/ in uri
+        if(uri.indexOf('https://twitter.com/') === -1) {
+            uri = `https://twitter.com/${uri}`;
+        }
+        //check if already follow
         await this.page.goto(uri);
+        try {
+            await this.page.waitForSelector(`[data-testid="unfollow"]`, { timeout: 2000 });
+            return await this.screenshot('follow');
+            
+        } catch (error) {
+        }
         const followBtn = await this.page.waitForSelector(`[data-testid="placementTracking"]`);
         if (followBtn) {
             await followBtn.click({ delay: this.randomNum(10, 60) });
         }
-        await this.screenshot('follow');
+        return  await this.screenshot('follow');
     }
 
     async like(uri: string) {
